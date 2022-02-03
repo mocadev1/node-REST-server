@@ -20,6 +20,9 @@ class Server {
 
         // CORS
         this.app.use( cors() );
+
+        // Reading and parsing the request body
+        this.app.use( express.json() );
         
         // Public directory
         this.app.use('/ejemplo', express.static('public') );
