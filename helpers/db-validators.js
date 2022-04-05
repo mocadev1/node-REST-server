@@ -1,4 +1,6 @@
 const Role = require('../models/role');
+const User = require('../models/user')
+const res = require('express/lib/response');
 
 
 const isValidRole = async ( role = '' ) => {
@@ -10,6 +12,15 @@ const isValidRole = async ( role = '' ) => {
 };
 
 
+const emailExists = async ( email = '' ) => {
+    // Verify that email exists
+    const emailExists = await User.findOne({ email });
+    if ( emailExists ) {
+        throw new Error(`The email "${ email }" has already been used`);
+    }
+}
+
 module.exports = {
-    isValidRole
+    isValidRole,
+    emailExists
 }

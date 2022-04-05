@@ -26,19 +26,8 @@ const putUsers = (req, res = response) => {
 }
 
 const postUsers = async (req, res = response) => {
-
-
-
     const {name, email, password, role} = req.body;
     const user = new User({name, email, password, role});
-
-    // Verify that email exists
-    const emailExists = await User.findOne({ email });
-    if ( emailExists ) {
-        return res.status(400).json({
-            msg: `The email '${email}' has already been used`
-        })
-    }
 
     // Password encryption
     const salt = bcryptjs.genSaltSync();
