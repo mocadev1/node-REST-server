@@ -2,12 +2,13 @@ const { request, response } = require('express');
 const bcryptjs = require('bcryptjs');
 
 const User = require('../models/user');
+const {encryptPassword} = require('../helpers/security-validators');
 
 
 const getUsers = (req = request, res = response) => {
 
     const {nombre, apellido} = req.query
-    
+
     res.json({
         msg: 'get API - Controller',
         nombre,
@@ -15,13 +16,23 @@ const getUsers = (req = request, res = response) => {
     });
 };
 
-const putUsers = (req, res = response) => {
+const putUsers = async ( req, res = response ) => {
 
-    const id = req.params.id;
-    
+    const {id} = req.params;
+    const {_id, password, google, ...rest} = req.body
+
+    // TODO: Validate against DB that are trying to update their own password and no others
+
+    // Here just encrypting the password to store it safely
+    if ( password ) {
+        rest.password = encryptPassword(password);
+    }
+
+    const user = await User.findByIdAndUpdate(id, rest);
+
     res.json({
-        msg: 'put API - Controller',
-        id
+        msg: 'put API - putUsers',
+        user
     });
 }
 
@@ -29,13 +40,11 @@ const postUsers = async (req, res = response) => {
     const {name, email, password, role} = req.body;
     const user = new User({name, email, password, role});
 
-    // Password encryption
-    const salt = bcryptjs.genSaltSync();
-    user.password = bcryptjs.hashSync( password, salt);
+    user.password = encryptPassword(password);
 
     // Save in DB
     await user.save();
-    
+
     res.json({
         user
     });
