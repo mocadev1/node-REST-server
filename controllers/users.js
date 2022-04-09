@@ -1,5 +1,4 @@
 const { request, response } = require('express');
-const bcryptjs = require('bcryptjs');
 
 const User = require('../models/user');
 const {encryptPassword} = require('../helpers/security-validators');
@@ -28,7 +27,11 @@ const putUsers = async ( req, res = response ) => {
         rest.password = encryptPassword(password);
     }
 
-    const user = await User.findByIdAndUpdate(id, rest);
+    const options = {
+        returnDocument: 'after'
+    };
+
+    const user = await User.findByIdAndUpdate(id, rest, options); // Added option to return document status after update
 
     res.json({
         msg: 'put API - putUsers',
