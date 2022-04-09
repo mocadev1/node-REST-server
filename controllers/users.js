@@ -34,7 +34,6 @@ const putUsers = async ( req, res = response ) => {
     const user = await User.findByIdAndUpdate(id, rest, options); // Added option to return document status after update
 
     res.json({
-        msg: 'put API - putUsers',
         user
     });
 }
