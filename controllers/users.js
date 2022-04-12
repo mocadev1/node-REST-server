@@ -4,18 +4,19 @@ const User = require('../models/user');
 const {encryptPassword} = require('../helpers/security-validators');
 
 
-const getUsers = async (req = request, res = response) => {
+const getUsers = async ( req = request, res = response ) => {
 
     const {limit = 10, skip = 0} = req.query;
     const query = {status: true};
 
-    // Finding all users that are not logically deleted
-    const users = await User.find( query )
-        .skip(skip)
-        .limit(limit);
+    const [ count, users ] = await Promise.all([
+        User.countDocuments( query ),
 
-    // This is not efficient, 'cause we are making two blocking calls that are independent and can be optimized
-    const count = await User.countDocuments( query );
+        // Finding all users that are not logically deleted
+        User.find( query )
+            .skip( skip )
+            .limit( limit )
+    ]);
 
     res.json({
         count,
