@@ -4,14 +4,16 @@ const User = require('../models/user');
 const {encryptPassword} = require('../helpers/security-validators');
 
 
-const getUsers = (req = request, res = response) => {
+const getUsers = async (req = request, res = response) => {
 
-    const {nombre, apellido} = req.query
+    const {limit = 10, skip = 0} = req.query;
+
+    const users = await User.find()
+        .skip(skip)
+        .limit(limit);
 
     res.json({
-        msg: 'get API - Controller',
-        nombre,
-        apellido
+        users
     });
 };
 

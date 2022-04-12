@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { check } = require('express-validator');
+const { check, query} = require('express-validator');
 
 const { fieldsValidation } = require('../middlewares/fields-validation');
 const { isValidRole, emailExists, userByIdExists} = require('../helpers/db-validators');
@@ -11,7 +11,11 @@ const { getUsers,
 
 const router = Router();
 
-router.get('/', getUsers);
+router.get('/', [
+    query('limit', 'Limit should be a int').isInt(),
+    query('skip', 'Skip should be a int').isInt(),
+    fieldsValidation
+], getUsers);
 
 router.put('/:id', [
     check('id', `It's not a valid ID`).isMongoId(),
