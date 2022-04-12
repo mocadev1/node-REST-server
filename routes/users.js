@@ -12,8 +12,8 @@ const { getUsers,
 const router = Router();
 
 router.get('/', [
-    query('limit', 'Limit should be a int').isInt(),
-    query('skip', 'Skip should be a int').isInt(),
+    query('limit', 'Limit should be a int').optional().isInt(),
+    query('skip', 'Skip should be a int').optional().isInt(),
     fieldsValidation
 ], getUsers);
 
