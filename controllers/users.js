@@ -61,10 +61,14 @@ const postUsers = async (req, res = response) => {
     });
 }
 
-const deleteUsers = (req, res = response) => {
-    res.json({
-        msg: 'delete API - Controller'
-    });
+const deleteUsers = async (req = request, res = response) => {
+
+    const {id} = req.params;
+
+    // Deleting physically, unrecommended
+    const user = await User.findByIdAndDelete(id);
+
+    res.json(user);
 }
 
 module.exports = {
