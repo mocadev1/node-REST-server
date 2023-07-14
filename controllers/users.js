@@ -71,8 +71,9 @@ const deleteUsers = async (req = request, res = response) => {
         { status: false},
         { returnDocument: 'after'}
     );
+    const authUser = req.user;
 
-    res.json(user);
+    res.json({user, authUser});
 }
 
 module.exports = {
