@@ -66,9 +66,14 @@ const deleteUsers = async (req = request, res = response) => {
     const {id} = req.params;
 
     // Soft delete, recommended
-    const user = await User.findByIdAndUpdate(id, { status: false});
+    const user = await User.findByIdAndUpdate(
+        id,
+        { status: false},
+        { returnDocument: 'after'}
+    );
+    const authUser = req.user;
 
-    res.json(user);
+    res.json({user, authUser});
 }
 
 module.exports = {
